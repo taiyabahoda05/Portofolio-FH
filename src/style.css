@@ -34,8 +34,9 @@ button{font:inherit;cursor:pointer}
 .hero-summary{margin-top:22px;max-width:640px;font-size:15.5px;line-height:1.75;color:var(--text)}
 .hero-summary b{color:var(--ink);font-weight:700}
 .hero-summary b.navy{color:var(--navy)}
-.stat-row{margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:640px}
+.stat-row{margin-top:34px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:760px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:5px}
+.stat-rank{grid-column:span 2;flex-direction:row;align-items:center;justify-content:flex-start;gap:18px}
 .stat small{font-size:9.5px;font-weight:700;letter-spacing:.05em;color:var(--muted)}
 .stat b{font-size:13px;font-weight:800;color:var(--ink)}
 .stat b.mono{font-family:var(--mono);color:var(--navy);font-size:12.5px}
@@ -121,13 +122,16 @@ button{font:inherit;cursor:pointer}
 .score b span{font:400 11px var(--mono);color:var(--muted)}
 .score em{font:normal 600 9.5px var(--mono);color:var(--muted)}
 .score em.ok{color:var(--green)}
-.ship-photo{position:relative;margin:0;border-radius:16px;overflow:hidden;height:240px;background:#cfd8e6}
-.ship-photo img{width:100%;height:100%;object-fit:cover}
+.ship-photo{position:relative;margin:0;width:100%;aspect-ratio:.9;border:1px solid #fff;border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 20px 40px rgba(255,255,255,.16);transform-style:preserve-3d;transition:box-shadow .25s,border-color .25s}
+.ship-photo img{width:100%;height:100%;object-fit:contain}
+.ship-photo:hover{border-color:#fff;box-shadow:0 28px 54px rgba(255,255,255,.22)}
 .ship-photo figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 16px 12px;background:linear-gradient(transparent,rgba(8,16,40,.85));color:#fff;font-size:11px;font-weight:600}
 .ship-photo figcaption span{color:var(--yellow);font-weight:700}
-.school-title{display:flex;align-items:center;gap:9px;margin:22px 0 12px;font-size:15px;font-weight:800;color:var(--ink)}
+.school-section{margin-top:32px}
+.school-title{display:flex;align-items:center;gap:9px;margin:22px 0 12px;text-align:left;font-size:15px;font-weight:800;color:var(--ink)}
 .school-title svg{color:var(--navy)}
-.school-card{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.school-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.school-card{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .school-card>div:first-child{display:flex;flex-direction:column;gap:3px}
 .school-card small{font-size:9.5px;font-weight:800;letter-spacing:.03em;color:var(--navy)}
 .school-card b{font-size:14px;font-weight:800;color:var(--ink)}
@@ -169,10 +173,10 @@ button{font:inherit;cursor:pointer}
 .gallery-dot.is-active{width:22px;border-radius:999px;background:var(--navy)}
 
 /* Contact */
-.contact{position:relative;min-height:460px;display:flex;align-items:center;overflow:hidden;background:var(--navy-deep);color:#fff}
+.contact{position:relative;min-height:460px;display:flex;flex-direction:column;align-items:stretch;overflow:hidden;background:var(--navy-deep);color:#fff}
 .contact-image{position:absolute;inset:0;background-size:cover;background-position:center}
 .contact-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,29,73,.78),rgba(23,43,102,.62) 65%,rgba(23,43,102,.35))}
-.contact-content{position:relative;z-index:2;width:100%;padding-top:76px;padding-bottom:76px}
+.contact-content{position:relative;z-index:2;flex:1;width:100%;padding-top:76px;padding-bottom:76px}
 .contact .eyebrow{color:var(--yellow)}
 .contact h2{margin:16px 0;font-size:clamp(38px,5vw,60px);line-height:1.05;font-weight:800;letter-spacing:-.035em}
 .contact h2 em{font-style:normal;color:var(--yellow)}
@@ -182,11 +186,12 @@ button{font:inherit;cursor:pointer}
 .contact-details svg{color:var(--yellow)}
 
 /* Footer */
-.footer{background:#0e1838;color:#aab5cd;padding:22px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:11px}
+.footer{position:relative;z-index:2;background:transparent;border-top:1px solid rgba(255,255,255,.16);color:#aab5cd;padding:22px clamp(20px,4vw,60px);display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:11px}
 .footer a{color:#fff}
+.footer>span{color:#fff}
 .footer-brand{display:inline-flex;align-items:center;gap:9px;font-weight:800;font-size:14px}
 .footer>a:not(.footer-brand){font:500 9.5px var(--mono);letter-spacing:.08em}
-.admin-link{opacity:.45}
+.admin-link{color:#fff!important;opacity:1}
 
 /* Animation */
 .section-reveal{opacity:0;transform:translateY(24px) scale(.99);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
@@ -221,12 +226,13 @@ button{font:inherit;cursor:pointer}
 .hero-inner{grid-template-columns:1fr;padding-top:40px}
 .hero-side{max-width:560px}
 .feature-grid,.cert-grid{grid-template-columns:1fr 1fr}
-.edu-layout{grid-template-columns:1fr}}
+.edu-layout{grid-template-columns:1fr}.ship-photo{aspect-ratio:1}}
 @media(max-width:640px){
 .identity-text b{font-size:13px}.identity-text small{font-size:8.5px}
 .hero h1{margin-top:28px}.stat-row{grid-template-columns:1fr 1fr}.portrait-photo{height:340px}
 .section{padding:60px 0}
 .feature-grid,.cert-grid,.doc-grid{grid-template-columns:1fr}
+.school-grid{grid-template-columns:1fr}
 .doc-fields{grid-template-columns:1fr 1fr}.score-grid{grid-template-columns:1fr}
 .gallery-layout{grid-template-columns:1fr;gap:28px}
 .gallery-intro{max-width:540px}

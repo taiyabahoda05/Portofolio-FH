@@ -24,16 +24,17 @@ const profile = {
 
 // Image paths — change these if your files are named differently.
 const IMAGES = {
-  hero: "/gallery/white-cap.jpg",        // portrait used in the hero card
+  hero: "/gallery/25.jpeg",              // portrait used in the hero card
   ship: "/gallery/ship-deck.jpg",        // container-ship photo in the GP Rating section
   contact: "/gallery/contact-bg.jpeg"
 };
 
 const stats = [
-  ["INDIAN CDC NO.", "MUM 649873", "mono"],
   ["INDOS NO.", "26GM2070", "mono"],
-  ["NATIONAL RANK", "313th (Top 25%)", ""],
-  ["AVAILABILITY", "Immediate", "green"]
+  ["PASSPORT NO.", "W7736538", "mono"],
+  ["INDIAN CDC NO.", "MUM 649873", "mono"],
+  ["SID NO.", "K35834251", "mono"],
+  ["NATIONAL RANK", "313th (Top 25%)", ""]
 ];
 
 const highlights = [
@@ -62,20 +63,22 @@ const schooling = [
 ];
 
 const certifications = [
-  { code: "GP", title: "General Purpose Rating (Pre-Sea)", status: "AMET University, Chennai", pdf: "/certificates/GP.pdf" },
-  { code: "EFA", title: "Elementary First Aid (EFA)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
+  { code: "GP", title: "General Purpose Rating (Pre-Sea)", status: "AMET University, Chennai • Certificate No.: G2606M17032/Jun 26/133855", pdf: "/certificates/GP.pdf" },
   { code: "PST", title: "Personal Survival Techniques (PST)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
-  { code: "PSSR", title: "Personal Safety & Social Responsibilities (PSSR)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
   { code: "FPFF", title: "Fire Prevention & Fire Fighting (FPFF)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
+  { code: "EFA", title: "Elementary First Aid (EFA)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
+  { code: "PSSR", title: "Personal Safety & Social Responsibilities (PSSR)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
   { code: "STSDSD", title: "Security Training for Seafarers with Designated Security Duties", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/2.pdf" },
   { code: "PSSR Amendment", title: "Prevention of and Response to Violence and Harassment On Board", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/3.pdf" }
 ];
 
+
 const competencies = [
-  { title: "Deck & Seamanship", items: ["Deck maintenance", "Rope work & knots", "Mooring operations", "Bridge watchkeeping"] },
-  { title: "Safety & Emergency", items: ["PPE awareness", "Fire fighting", "Emergency response", "Survival procedures"] },
-  { title: "Professional Strengths", items: ["Team coordination", "Discipline", "Communication", "Situational awareness"] }
+  { title: "Deck & Seamanship", items: ["Deck maintenance", "Rope work & knots", "Mooring operations", "Bridge watchkeeping", "Anchoring operations", "Cargo handling awareness", "Deck equipment handling", "Rigging & lifting operations"] },
+  { title: "Safety & Emergency", items: ["PPE awareness", "Life-saving appliances", "Fire fighting/prevention", "Emergency response", "Survival procedures", "First aid awareness", "Abandon ship procedures", "Enclosed space safety", "Pollution prevention"] },
+  { title: "Professional Strengths", items: ["Team coordination", "Discipline", "Communication", "Situational awareness", "Adaptability", "Problem-solving", "Time management", "Responsibility", "Teamwork", "Following instructions"] }
 ];
+
 
 const gallery = [
   { src: "/gallery/29.png", title: "29" },
@@ -85,7 +88,8 @@ const gallery = [
   { src: "/gallery/3.jpeg", title: "3" },
   { src: "/gallery/6.jpeg", title: "6" },
   { src: "/gallery/19.jpeg", title: "19" },
-  { src: "/gallery/28.png", title: "28" }
+  { src: "/gallery/28.png", title: "28" },
+  { src: "/gallery/31.jpeg", title: "31" }
 ];
 
 /* ------------------------------------------------------------------ */
@@ -238,16 +242,16 @@ function Hero() {
           <h1>{profile.name}</h1>
           <h2>{profile.role}</h2>
           <p className="hero-summary">
-            Pre-Sea General Purpose Rating graduate from <b>AMET University, Chennai</b> with proven academic merit (ranked in the <b className="navy">Top 25% National Merit List - Rank 313th</b>). Completely equipped with verified Indian CDC, INDOS, SID, Passport, and DG Shipping compliant STCW safety certificates.
+            Pre-Sea General Purpose Rating graduate from <b>AMET University, Chennai</b> with proven academic merit (ranked in the <b className="navy">Top 25% National Merit List - Rank 313th</b>). Completely equipped with verified Indian INDOS, Passport, CDC and SID DG Shipping compliant STCW safety certificates.
           </p>
           <div className="stat-row">
             {stats.map(([label, value, kind]) => (
-              <div className="stat" key={label}><small>{label}</small><b className={kind}>{value}</b></div>
+              <div className={label === "NATIONAL RANK" ? "stat stat-rank" : "stat"} key={label}><small>{label}</small><b className={kind}>{value}</b></div>
             ))}
           </div>
           <div className="hero-actions">
             <a className="btn btn-primary" href={"mailto:" + profile.email}><Send size={15} /> Send Placement Inquiry</a>
-            <a className="btn btn-outline" href="/CV%20%E2%80%93%20FH.pdf" target="_blank" rel="noopener noreferrer"><FileText size={15} /> View Resume</a>
+            <a className="btn btn-outline" href="/CV%20-%20FH.pdf" target="_blank" rel="noopener noreferrer"><FileText size={15} /> View Resume</a>
             <a className="btn btn-outline" href={"tel:" + profile.phone.replace(/[^\d+]/g, "")}><Phone size={14} /> {profile.phone}</a>
             <a className="btn btn-outline btn-small" href={"mailto:" + profile.email}><CheckCircle2 size={13} /> {profile.email}</a>
           </div>
@@ -348,10 +352,7 @@ function Education() {
           <h2>General Purpose Rating (G.P. Rating)</h2>
           <div className="college-box">
             <b>Marine Training College, AMET University</b>
-            <small>Chennai, Tamil Nadu, India • Certificate No.: <code>02606M17032/Jun 26/133855</code></small>
-          </div>
-          <div className="document-actions" style={{ marginTop: "18px" }}>
-            <a className="btn btn-outline" href="/certificates/GP.pdf" target="_blank" rel="noopener noreferrer"><FileText size={15} /> View GP Rating Certificate</a>
+            <small>Chennai, Tamil Nadu, India • MTI No.: <code>401001</code></small>
           </div>
           <p className="edu-text">Rigorous residential pre-sea training covering deck and engine seamanship, shipboard routine, rope work, splicing, life-saving appliances, fire fighting systems, marine safety regulations, and navigational watch support.</p>
 
@@ -373,11 +374,15 @@ function Education() {
         </div>
 
         <div className="edu-right">
-          <figure className="ship-photo">
-            <img src={IMAGES.ship} alt="Container ship at sea during sunset" />
+          <figure className="ship-photo tilt-card">
+            <img src={IMAGES.ship} alt="Farazul Haque wearing a white cap" />
             <figcaption><span>Ready for Deep-Sea Fleet Deployment</span> • Container / Bulk / Tanker</figcaption>
           </figure>
-          <h3 className="school-title"><GraduationCap size={17} /> Secondary &amp; Higher Secondary Education</h3>
+        </div>
+      </div>
+      <div className="container school-section">
+        <h3 className="school-title"><GraduationCap size={17} /> Secondary &amp; Higher Secondary Education</h3>
+        <div className="school-grid">
           {schooling.map(s => (
             <article className="school-card tilt-card" key={s.level}>
               <div><small>{s.level}</small><b>{s.school}</b><span>{s.note}</span></div>
@@ -498,6 +503,7 @@ function Contact() {
           <span><MapPin size={16} /> {profile.location}</span>
         </div>
       </div>
+      <Footer />
     </section>
   );
 }
@@ -570,7 +576,6 @@ function App() {
     <>
       <Header />
       <main><Hero /><About /><Documents /><Education /><Certifications /><Competencies /><Gallery /><Contact /></main>
-      <Footer />
     </>
   );
 }
