@@ -1,171 +1,125 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import {
-  Anchor, ArrowDown, ArrowRight, ArrowUpRight, Award, BriefcaseBusiness,
-  ChevronLeft, ChevronRight, Compass, HardHat, Mail, MapPin, Menu,
-  Phone, ShieldCheck, Ship, X
-} from "lucide-react";
 import "./style.css";
 
 const profile = {
   name: "Farazul Haque",
-  role: "Maritime • Fire & Safety Professional",
+  designation: "TRAINEE OS • GP RATING",
+  merit: "[MERIT / RANKING]",
+  headline: "Disciplined Deck Hand Ready to Excel in Global Waters",
+  summary: "Trained in maritime safety and seamanship. Add a concise, accurate introduction covering your training, practical skills, career goals and readiness for vessel opportunities.",
   location: "[City, Country]",
   email: "[your.email@example.com]",
   phone: "[+91 XXXXX XXXXX]",
-  summary: "A safety-focused professional with an interest in maritime operations, emergency response, and operational readiness. Replace this introduction with a short, authentic summary of your experience, strengths, and career goals.",
-  availability: "OPEN TO PROFESSIONAL OPPORTUNITIES"
+  availability: "AVAILABLE FOR OPPORTUNITIES"
 };
 
-const experience = [
-  { period: "[Month YYYY – Present]", title: "[Current role / designation]", company: "[Company / Organization]", detail: "Add a concise description of your responsibilities, operational environment, and measurable contributions." },
-  { period: "[Month YYYY – Month YYYY]", title: "[Previous role / training]", company: "[Company / Institution]", detail: "Describe relevant duties, practical exposure, projects, or training completed." }
+// Replace bracketed values with verified information before publishing.
+// Do not add real passport, CDC or SID numbers to a public website.
+const highlights = [
+  { icon: "✦", title: "Merit Standing", value: "[Rank / Merit]", detail: "Add the verified GP Rating examination result or merit achievement." },
+  { icon: "▤", title: "Documentation Ready", value: "[Document status]", detail: "Summarise document readiness without displaying sensitive ID numbers." },
+  { icon: "✓", title: "STCW Training", value: "[Certification status]", detail: "List only completed and valid STCW courses." }
 ];
 
-const qualifications = [
-  { title: "[Qualification / Degree]", place: "[Institution]", year: "[Year]" },
-  { title: "[Professional Certificate]", place: "[Training provider]", year: "[Year]" },
-  { title: "[Safety / Maritime Training]", place: "[Training provider]", year: "[Year]" }
+const documents = [
+  { label: "Biometric Verified", title: "Seafarers Identity Document (SID)", fields: [["DOCUMENT STATUS", "[Verified / Pending]"], ["PLACE OF ISSUE", "[City]"], ["DATE OF ISSUE", "[DD.MM.YYYY]"], ["VALID UNTIL", "[DD.MM.YYYY]"]] },
+  { label: "International Clearance", title: "Passport", fields: [["DOCUMENT STATUS", "[Available / Pending]"], ["PLACE OF ISSUE", "[City]"], ["DATE OF ISSUE", "[DD.MM.YYYY]"], ["VALID UNTIL", "[DD.MM.YYYY]"]] },
+  { label: "Seafarer Record", title: "Continuous Discharge Certificate (CDC)", fields: [["DOCUMENT STATUS", "[Available / Pending]"], ["ISSUING AUTHORITY", "[Authority]"], ["DATE OF ISSUE", "[DD.MM.YYYY]"], ["VALID UNTIL", "[DD.MM.YYYY]"]] }
 ];
 
-const skills = [
-  { icon: ShieldCheck, title: "Fire & Safety", items: ["Fire prevention", "Emergency response", "PPE & SCBA", "Risk awareness"] },
-  { icon: Ship, title: "Maritime Operations", items: ["Shipboard familiarization", "Deck operations", "Safety procedures", "Operational discipline"] },
-  { icon: HardHat, title: "Professional Skills", items: ["Team coordination", "Situational awareness", "Communication", "Safety documentation"] }
+const education = [
+  { eyebrow: "MARITIME ACADEMY EDUCATION", title: "General Purpose Rating (G.P. Rating)", place: "[AMET / Training Institute]", period: "[Year – Year]", detail: "Add course duration, training modules and practical seamanship exposure." },
+  { eyebrow: "ACADEMIC BACKGROUND", title: "[School / Higher Secondary Qualification]", place: "[Institution]", period: "[Year]", detail: "Add the qualification and institution details." }
 ];
 
-// Add image files to public/gallery and update these paths and captions.
-// The first three entries are placeholders until Farazul's final photo selection is confirmed.
+const certifications = [
+  { code: "01", title: "Elementary First Aid (EFA)", status: "[Completed / In progress]" },
+  { code: "02", title: "Personal Survival Techniques (PST)", status: "[Completed / In progress]" },
+  { code: "03", title: "Personal Safety & Social Responsibilities (PSSR)", status: "[Completed / In progress]" },
+  { code: "04", title: "Fire Prevention & Fire Fighting (FPFF)", status: "[Completed / In progress]" },
+  { code: "05", title: "Security Awareness", status: "[Completed / In progress]" },
+  { code: "06", title: "[Additional course / certificate]", status: "[Status]" }
+];
+
+const competencies = [
+  { title: "Deck & Seamanship", items: ["Deck maintenance", "Rope work & knots", "Mooring operations", "Basic seamanship"] },
+  { title: "Safety & Emergency", items: ["PPE awareness", "Fire safety", "Emergency response", "Survival procedures"] },
+  { title: "Professional Strengths", items: ["Team coordination", "Discipline", "Communication", "Situational awareness"] }
+];
+
 const gallery = [
-  { src: "/images/hero-firefighter.jpg", title: "Fire & Rescue Protective Equipment", category: "FIRE & SAFETY" },
-  { src: "/gallery/orange-uniform-portrait.jpg", title: "Professional Portrait", category: "PROFILE" },
-  { src: "/gallery/ship-deck.jpg", title: "Maritime Ship Visit", category: "MARITIME" },
-  { src: "/gallery/white-cap.jpg", title: "Maritime Uniform & Cap", category: "UNIFORM" },
-  { src: "/gallery/bridge-operations.png", title: "Bridge & Navigation Familiarization", category: "OPERATIONS" }
+  { src: "/images/hero-firefighter.jpg", title: "Fire & Safety Training", type: "SAFETY" },
+  { src: "/gallery/orange-uniform-portrait.jpg", title: "Professional Portrait", type: "PROFILE" },
+  { src: "/gallery/ship-deck.jpg", title: "Maritime Environment", type: "MARITIME" },
+  { src: "/gallery/white-cap.jpg", title: "Professional Uniform", type: "PROFILE" },
+  { src: "/gallery/bridge-operations.png", title: "Bridge Familiarization", type: "OPERATIONS" }
 ];
 
 function Header() {
   const [open, setOpen] = useState(false);
-  const links = ["About", "Experience", "Expertise", "Gallery", "Contact"];
-  return <header className="site-header">
-    <a className="brand" href="#home" aria-label="Farazul Haque home">FH<span>.</span></a>
-    <button className="mobile-menu" onClick={() => setOpen(!open)} aria-label="Toggle menu">{open ? <X/> : <Menu/>}</button>
-    <nav className={open ? "navigation is-open" : "navigation"}>
-      {links.map(label => <a key={label} href={`#${label.toLowerCase()}`} onClick={() => setOpen(false)}>{label}</a>)}
-      <a className="nav-contact" href={`mailto:${profile.email}`}>Get in touch <ArrowUpRight size={14}/></a>
-    </nav>
+  const links = [["About", "about"], ["Documents & CDC", "documents"], ["AMET GP Rating", "education"], ["STCW Certifications", "certifications"], ["Competencies", "competencies"], ["Contact", "contact"]];
+  return <header className="header">
+    <a className="identity" href="#home"><span className="identity-mark">⚓</span><span><b>{profile.name}<i className="online-dot" /></b><small>{profile.designation} <span>({profile.merit})</span></small></span></a>
+    <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label="Toggle navigation">{open ? "✕" : "☰"}</button>
+    <nav className={open ? "nav nav-open" : "nav"}>{links.map(([label,id]) => <a key={id} href={"#"+id} onClick={() => setOpen(false)}>{label}</a>)}<a className="hire-button" href="#contact">⚓ &nbsp; Hire for Vessel</a></nav>
   </header>;
 }
 
-function Reveal({ children, className = "" }) {
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const node = document.getElementById(children?.props?.id || "");
-    if (!node) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { setVisible(true); observer.disconnect(); }
-    }, { threshold: 0.12 });
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-  return <div className={`reveal ${visible ? "revealed" : ""} ${className}`}>{children}</div>;
-}
-
-function SectionHeading({ index, eyebrow, title, note }) {
-  return <div className="section-heading">
-    <div><span className="eyebrow">{index} / {eyebrow}</span><h2>{title}</h2></div>
-    {note && <p>{note}</p>}
-  </div>;
+function SectionTitle({ eyebrow, title, note }) {
+  return <div className="section-title"><span className="eyebrow">{eyebrow}</span><h2>{title}</h2>{note && <p>{note}</p>}</div>;
 }
 
 function Hero() {
-  return <section className="hero section-wrap" id="home">
-    <div className="hero-copy">
-      <div className="availability"><i/> {profile.availability}</div>
-      <p className="hero-kicker">PROFESSIONAL PORTFOLIO <span>— 2026</span></p>
-      <h1>Farazul<br/><em>Haque.</em></h1>
-      <p className="hero-role">{profile.role}</p>
-      <p className="hero-intro">{profile.summary}</p>
-      <div className="hero-actions">
-        <a className="button button-primary" href="#experience">Explore profile <ArrowDown size={16}/></a>
-        <a className="text-link" href={`mailto:${profile.email}`}>Contact me <ArrowUpRight size={16}/></a>
-      </div>
-      <div className="hero-meta"><span><MapPin size={14}/> {profile.location}</span><span><Anchor size={14}/> SAFETY • DISCIPLINE • READINESS</span></div>
+  return <section className="hero page-width" id="home">
+    <div className="hero-copy"><span className="eyebrow">PROFESSIONAL PROFILE</span><h1>{profile.headline}</h1><p>{profile.summary}</p>
+      <div className="hero-actions"><a className="primary-button" href="#documents">View Documents <span>↗</span></a><a className="secondary-link" href="#contact">Contact / Hire <span>→</span></a></div>
+      <div className="hero-meta"><span>⌖ &nbsp;{profile.location}</span><span>● &nbsp;{profile.availability}</span></div>
     </div>
-    <div className="hero-visual">
-      <div className="visual-frame">
-        <img src="/images/hero-firefighter.jpg" alt="Farazul in fire and rescue protective equipment" onError={e => {e.currentTarget.style.display="none";}}/>
-        <div className="image-fallback"><ShieldCheck size={54}/><span>ADD HERO PHOTOGRAPH</span><small>Replace public/images/hero-firefighter.jpg</small></div>
-        <div className="visual-stamp"><span>FH</span><small>PROFESSIONAL<br/>PROFILE</small></div>
-      </div>
-      <div className="visual-caption"><span>01 — FIELD EXPERIENCE</span><span>SCROLL TO EXPLORE ↓</span></div>
-      <div className="orbit orbit-one"></div><div className="orbit orbit-two"></div>
-    </div>
+    <div className="hero-photo"><img src="/images/hero-firefighter.jpg" alt="Farazul in professional protective equipment" /><div className="photo-caption"><b>FARAZUL HAQUE</b><span>MARITIME PROFESSIONAL PROFILE</span></div></div>
   </section>;
+}
+
+function Highlights() {
+  return <section className="highlights page-width">{highlights.map((item,i)=><article className="highlight-card" key={item.title}><span className="highlight-icon">{item.icon}</span><h3>{item.title}</h3><b>{item.value}</b><p>{item.detail}</p></article>)}</section>;
 }
 
 function About() {
-  return <section className="section-wrap section-block" id="about">
-    <SectionHeading index="01" eyebrow="ABOUT" title={<>Prepared for<br/><em>what matters.</em></>} note="A personal introduction grounded in professional values, practical experience and a commitment to safety."/>
-    <div className="about-grid">
-      <div className="about-mark"><Compass size={42}/><span>FOCUS / 001</span></div>
-      <div className="about-content"><p className="lead">{profile.summary}</p><p>Use this space to explain your professional journey, the environments you have worked in, the training that shaped you, and the kind of opportunities you are looking for. Keep the final version factual and personal.</p><div className="fact-row"><div><small>BASED IN</small><b>{profile.location}</b></div><div><small>FIELD</small><b>Maritime & Safety</b></div><div><small>PROFILE</small><b>Professional</b></div></div></div>
-    </div>
-  </section>;
+  return <section className="section page-width" id="about"><SectionTitle eyebrow="ABOUT / PROFILE" title="A professional approach to life at sea" note="A concise overview of maritime training, professional values and career direction."/><div className="about-panel"><div className="about-emblem">⚓<small>FH / PROFILE</small></div><div><h3>Prepared, disciplined and safety focused.</h3><p>{profile.summary}</p><div className="about-facts"><span><small>BASED IN</small><b>{profile.location}</b></span><span><small>DESIGNATION</small><b>{profile.designation}</b></span><span><small>AVAILABILITY</small><b>{profile.availability}</b></span></div></div></div></section>;
 }
 
-function Experience() {
-  return <section className="section-wrap section-block" id="experience">
-    <SectionHeading index="02" eyebrow="CAREER JOURNEY" title={<>Experience &<br/><em>training.</em></>} note="A clear timeline of professional roles, practical training and milestones."/>
-    <div className="timeline">{experience.map((item, i) => <article className="timeline-item" key={i}><div className="timeline-date">{item.period}</div><div className="timeline-dot"></div><div className="timeline-copy"><span className="eyebrow">0{i+1} — EXPERIENCE</span><h3>{item.title}</h3><h4>{item.company}</h4><p>{item.detail}</p></div></article>)}</div>
-    <div className="qualifications"><h3>Qualifications & certifications</h3><div className="qualification-grid">{qualifications.map((q,i)=><div className="qualification" key={i}><Award size={18}/><div><b>{q.title}</b><span>{q.place}</span></div><small>{q.year}</small></div>)}</div></div>
-  </section>;
+function Documents() {
+  return <section className="section soft-section" id="documents"><div className="page-width"><SectionTitle eyebrow="DOCUMENTS & CDC" title="Essential seafarer documentation" note="A simple overview of document readiness. Sensitive document numbers should never be published on this page."/><div className="document-grid">{documents.map(doc=><article className="document-card" key={doc.title}><div className="document-head"><span>{doc.label}</span><b>▤</b></div><h3>{doc.title}</h3><div className="document-fields">{doc.fields.map(([label,value])=><div key={label}><small>{label}</small><b>{value}</b></div>)}</div></article>)}</div></div></section>;
 }
 
-function Expertise() {
-  return <section className="section-wrap section-block" id="expertise">
-    <SectionHeading index="03" eyebrow="CORE CAPABILITIES" title={<>Knowledge in<br/><em>practice.</em></>} note="Edit these capability groups to accurately reflect completed courses, certifications and demonstrated skills."/>
-    <div className="skill-grid">{skills.map((group,i)=>{const Icon=group.icon;return <article className="skill-card" key={group.title}><div className="skill-top"><span>0{i+1}</span><Icon size={25}/></div><h3>{group.title}</h3><div className="skill-tags">{group.items.map(item=><span key={item}>{item}</span>)}</div></article>})}</div>
-  </section>;
+function Education() {
+  return <section className="section page-width" id="education"><SectionTitle eyebrow="MARITIME ACADEMY EDUCATION" title="General Purpose Rating (G.P. Rating)" note="Training, practical learning and academic milestones."/><div className="education-layout"><div className="education-copy"><span className="eyebrow">01 / CORE MARITIME TRAINING</span><h3>{education[0].title}</h3><h4>{education[0].place}</h4><span className="period">{education[0].period}</span><p>{education[0].detail}</p></div><img src="/gallery/ship-deck.jpg" alt="Ship at sea" /></div><div className="education-secondary"><span className="eyebrow">{education[1].eyebrow}</span><h3>{education[1].title}</h3><p>{education[1].place} <span>{education[1].period}</span></p><small>{education[1].detail}</small></div></section>;
+}
+
+function Certifications() {
+  return <section className="section soft-section" id="certifications"><div className="page-width"><SectionTitle eyebrow="STCW CERTIFICATIONS" title="Safety training & certification" note="Update each item to reflect the actual certificates held and their current validity."/><div className="cert-grid">{certifications.map(c=><article className="cert-card" key={c.code}><span>{c.code}</span><div><h3>{c.title}</h3><small>{c.status}</small></div><b>↗</b></article>)}</div></div></section>;
+}
+
+function Competencies() {
+  return <section className="section page-width" id="competencies"><SectionTitle eyebrow="CORE COMPETENCIES" title="Skills for safe vessel operations" note="Edit these areas to reflect demonstrated skills and completed training."/><div className="competency-grid">{competencies.map((group,i)=><article className="competency-card" key={group.title}><span>0{i+1} / CAPABILITY</span><h3>{group.title}</h3><ul>{group.items.map(item=><li key={item}>{item}</li>)}</ul></article>)}</div></section>;
 }
 
 function Gallery() {
-  const [selected, setSelected] = useState(null);
-  const [filter, setFilter] = useState("ALL");
-  const categories = ["ALL", ...new Set(gallery.map(x=>x.category))];
-  const shown = filter === "ALL" ? gallery : gallery.filter(x=>x.category===filter);
-  useEffect(() => {
-    const onKey = e => { if(e.key==="Escape") setSelected(null); };
-    window.addEventListener("keydown",onKey); return ()=>window.removeEventListener("keydown",onKey);
-  }, []);
-  return <section className="section-wrap section-block" id="gallery">
-    <SectionHeading index="04" eyebrow="PHOTO JOURNAL" title={<>Moments from<br/><em>the field.</em></>} note="A curated collection of training, maritime environments and professional moments."/>
-    <div className="gallery-filters">{categories.map(c=><button className={filter===c?"active":""} key={c} onClick={()=>setFilter(c)}>{c}</button>)}</div>
-    <div className="gallery-grid">{shown.map((item,i)=><button className={`gallery-item gallery-item-${i%3}`} key={item.src} onClick={()=>setSelected(item)}><img src={item.src} alt={item.title} onError={e=>{e.currentTarget.style.display="none";}}/><div className="gallery-placeholder"><span>{item.category}</span><b>{item.title}</b><small>ADD PHOTO: {item.src}</small></div><div className="gallery-overlay"><span>{item.category}</span><b>{item.title}</b><ArrowUpRight size={20}/></div></button>)}</div>
-    {selected && <div className="lightbox" role="dialog" aria-modal="true" onClick={()=>setSelected(null)}><button aria-label="Close image" className="lightbox-close"><X/></button><img src={selected.src} alt={selected.title}/><p>{selected.title}</p></div>}
-  </section>;
+  const [active,setActive] = useState(null);
+  return <section className="section soft-section" id="gallery"><div className="page-width"><SectionTitle eyebrow="PHOTO JOURNAL" title="A closer look at the journey" note="Professional photographs and maritime training moments."/><div className="gallery-grid">{gallery.map(item=><button className="gallery-card" key={item.src} onClick={()=>setActive(item)}><img src={item.src} alt={item.title}/><span>{item.type}</span><b>{item.title}</b></button>)}</div></div>{active && <div className="lightbox" onClick={()=>setActive(null)}><button aria-label="Close">×</button><img src={active.src} alt={active.title}/><p>{active.title}</p></div>}</section>;
 }
 
 function Contact() {
-  return <section className="contact-section" id="contact">
-    <div className="contact-background"><img src="/images/contact-background.jpg" alt="" onError={e=>{e.currentTarget.style.display="none";}}/></div>
-    <div className="contact-shade"></div>
-    <div className="section-wrap contact-content">
-      <span className="eyebrow">05 / CONTACT</span>
-      <h2>Let's connect<br/><em>with purpose.</em></h2>
-      <p>For professional opportunities, collaboration or further information, feel free to get in touch.</p>
-      <div className="contact-links"><a href={`mailto:${profile.email}`}><Mail size={18}/>{profile.email}<ArrowUpRight size={16}/></a><a href={`tel:${profile.phone.replace(/[^\d+]/g,"")}`}><Phone size={18}/>{profile.phone}<ArrowUpRight size={16}/></a><span><MapPin size={18}/>{profile.location}</span></div>
-      <div className="contact-note">REPLACE <code>public/images/contact-background.jpg</code> WITH YOUR CHOSEN PHOTOGRAPH</div>
-    </div>
-  </section>;
+  return <section className="contact" id="contact"><div className="contact-image" /><div className="contact-overlay" /><div className="page-width contact-content"><span className="eyebrow">CONTACT / HIRE FOR VESSEL</span><h2>Ready for the<br/><em>next voyage.</em></h2><p>For vessel hiring, professional opportunities or further information, please get in touch.</p><div className="contact-details"><a href={"mailto:"+profile.email}>✉ &nbsp;{profile.email}</a><a href={"tel:"+profile.phone.replace(/[^\d+]/g,"")}>☎ &nbsp;{profile.phone}</a><span>⌖ &nbsp;{profile.location}</span></div><small className="contact-placeholder">CONTACT BACKGROUND IMAGE: public/images/contact-background.jpg</small></div></section>;
 }
 
 function Footer() {
-  return <footer className="footer section-wrap"><a className="brand" href="#home">FH<span>.</span></a><span>© {new Date().getFullYear()} Farazul Haque. All rights reserved.</span><a href="#home">BACK TO TOP ↑</a><a className="admin-link" href="/analytics.html">ADMIN</a></footer>;
+  return <footer className="footer page-width"><a className="footer-brand" href="#home">⚓ &nbsp; FARAZUL HAQUE</a><span>© {new Date().getFullYear()} Farazul Haque. All rights reserved.</span><a href="#home">BACK TO TOP ↑</a><a href="/analytics.html">PRIVATE ANALYTICS</a></footer>;
 }
 
 function App() {
-  return <><div className="top-line"></div><Header/><main><Hero/><About/><Experience/><Expertise/><Gallery/><Contact/></main><Footer/></>;
+  useEffect(()=>{document.title="Farazul Haque | Maritime Professional";},[]);
+  return <><Header/><main><Hero/><Highlights/><About/><Documents/><Education/><Certifications/><Competencies/><Gallery/><Contact/></main><Footer/></>;
 }
 
 createRoot(document.getElementById("root")).render(<App/>);
