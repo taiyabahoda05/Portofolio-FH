@@ -19,7 +19,7 @@ const profile = {
   email: "mdfaraz247@gmail.com",
   phone: "+91 8235024445",
   location: "Bokaro Steel City, Jharkhand",
-  dob: "10 Aug 2003 (Age 22)"
+  dob: "10 Aug 2003 (Age 23)"
 };
 
 // Image paths — change these if your files are named differently.
@@ -62,12 +62,13 @@ const schooling = [
 ];
 
 const certifications = [
-  { code: "EFA", title: "Elementary First Aid (EFA)", status: "STCW-2010 • DG Shipping approved" },
-  { code: "PST", title: "Personal Survival Techniques (PST)", status: "STCW-2010 • DG Shipping approved" },
-  { code: "PSSR", title: "Personal Safety & Social Responsibilities (PSSR)", status: "STCW-2010 • DG Shipping approved" },
-  { code: "FPFF", title: "Fire Prevention & Fire Fighting (FPFF)", status: "STCW-2010 • DG Shipping approved" },
-  { code: "STSDSD", title: "Security Training for Seafarers with Designated Security Duties", status: "STCW-2010 • DG Shipping approved" },
-  { code: "GP", title: "General Purpose Rating (Pre-Sea)", status: "AMET University, Chennai" }
+  { code: "GP", title: "General Purpose Rating (Pre-Sea)", status: "AMET University, Chennai", pdf: "/certificates/GP.pdf" },
+  { code: "EFA", title: "Elementary First Aid (EFA)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
+  { code: "PST", title: "Personal Survival Techniques (PST)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
+  { code: "PSSR", title: "Personal Safety & Social Responsibilities (PSSR)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
+  { code: "FPFF", title: "Fire Prevention & Fire Fighting (FPFF)", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/1.pdf" },
+  { code: "STSDSD", title: "Security Training for Seafarers with Designated Security Duties", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/2.pdf" },
+  { code: "PSSR Amendment", title: "Prevention of and Response to Violence and Harassment On Board", status: "STCW-2010 • DG Shipping approved", pdf: "/certificates/3.pdf" }
 ];
 
 const competencies = [
@@ -77,12 +78,14 @@ const competencies = [
 ];
 
 const gallery = [
+  { src: "/gallery/29.png", title: "29" },
   { src: "/images/hero-firefighter.jpg", title: "Fire & Safety Training" },
   { src: "/gallery/orange-uniform-portrait.jpg", title: "Professional Portrait" },
   { src: "/gallery/bridge-operations.png", title: "Bridge Familiarization" },
   { src: "/gallery/3.jpeg", title: "3" },
   { src: "/gallery/6.jpeg", title: "6" },
-  { src: "/gallery/19.jpeg", title: "19" }
+  { src: "/gallery/19.jpeg", title: "19" },
+  { src: "/gallery/28.png", title: "28" }
 ];
 
 /* ------------------------------------------------------------------ */
@@ -347,6 +350,9 @@ function Education() {
             <b>Marine Training College, AMET University</b>
             <small>Chennai, Tamil Nadu, India • Certificate No.: <code>02606M17032/Jun 26/133855</code></small>
           </div>
+          <div className="document-actions" style={{ marginTop: "18px" }}>
+            <a className="btn btn-outline" href="/certificates/GP.pdf" target="_blank" rel="noopener noreferrer"><FileText size={15} /> View GP Rating Certificate</a>
+          </div>
           <p className="edu-text">Rigorous residential pre-sea training covering deck and engine seamanship, shipboard routine, rope work, splicing, life-saving appliances, fire fighting systems, marine safety regulations, and navigational watch support.</p>
 
           <div className="score-card">
@@ -396,7 +402,7 @@ function Certifications() {
               <div><h3>{c.title}</h3><small>{c.status}</small></div>
               <a
                 className="cert-document"
-                href={`/certificates/${c.code.toLowerCase()}.pdf`}
+                href={c.pdf}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`View ${c.title} certificate PDF`}
