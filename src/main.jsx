@@ -79,7 +79,10 @@ const competencies = [
 const gallery = [
   { src: "/images/hero-firefighter.jpg", title: "Fire & Safety Training" },
   { src: "/gallery/orange-uniform-portrait.jpg", title: "Professional Portrait" },
-  { src: "/gallery/bridge-operations.png", title: "Bridge Familiarization" }
+  { src: "/gallery/bridge-operations.png", title: "Bridge Familiarization" },
+  { src: "/gallery/3.jpeg", title: "3" },
+  { src: "/gallery/6.jpeg", title: "6" },
+  { src: "/gallery/19.jpeg", title: "19" }
 ];
 
 /* ------------------------------------------------------------------ */
