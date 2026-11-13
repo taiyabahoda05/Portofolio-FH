@@ -135,6 +135,26 @@ function SectionTitle({ eyebrow, title, note, aside }) {
 }
 
 function CompassBadge() {
+  const compassTicks = Array.from({ length: 64 }, (_, index) => {
+    const major = index % 8 === 0;
+    const medium = index % 4 === 0;
+    return {
+      angle: index * 5.625,
+      start: major ? 8 : medium ? 10 : 12,
+      end: major ? 15 : medium ? 14 : 13.5,
+      width: major ? 1.1 : medium ? 0.7 : 0.4
+    };
+  });
+  const rosePoints = Array.from({ length: 32 }, (_, index) => {
+    const angle = -Math.PI / 2 + index * Math.PI / 16;
+    const radius = index % 2 === 0 ? (index % 4 === 0 ? 23 : 17) : 7;
+    return `${(50 + Math.cos(angle) * radius).toFixed(2)},${(50 + Math.sin(angle) * radius).toFixed(2)}`;
+  }).join(" ");
+  const compassLabels = [
+    ["N", 50, 17], ["NE", 73, 27], ["E", 83, 50], ["SE", 73, 73],
+    ["S", 50, 83], ["SW", 27, 73], ["W", 17, 50], ["NW", 27, 27]
+  ];
+
   return (
     <div className="compass-badge" role="img" aria-label="Nautical compass">
       <div className="compass-stage">
@@ -142,55 +162,55 @@ function CompassBadge() {
           <defs>
             <radialGradient id="compass-face" cx="32%" cy="28%">
               <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="70%" stopColor="#e9eef8" />
-              <stop offset="100%" stopColor="#b8c5dc" />
+              <stop offset="72%" stopColor="#f4f6fb" />
+              <stop offset="100%" stopColor="#cbd4e4" />
             </radialGradient>
-            <linearGradient id="compass-red" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#ff766b" />
-              <stop offset="100%" stopColor="#a9152c" />
+            <linearGradient id="compass-rose" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#5268a1" />
+              <stop offset="48%" stopColor="#17285d" />
+              <stop offset="100%" stopColor="#080f2b" />
             </linearGradient>
-            <linearGradient id="compass-blue" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#314a91" />
-              <stop offset="100%" stopColor="#09152f" />
+            <linearGradient id="compass-gold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#fff0b0" />
+              <stop offset="50%" stopColor="#d8b45a" />
+              <stop offset="100%" stopColor="#9b7428" />
             </linearGradient>
           </defs>
-          <circle cx="50" cy="50" r="48" fill="#13204f" />
-          <circle cx="50" cy="50" r="44" fill="url(#compass-face)" stroke="#d8b45a" strokeWidth="1.5" />
-          <circle cx="50" cy="50" r="38" fill="none" stroke="#263b78" strokeWidth=".8" />
-          {[...Array(32).keys()].map(i => (
+          <circle cx="50" cy="50" r="48" fill="#0b153a" />
+          <circle cx="50" cy="50" r="45" fill="url(#compass-gold)" />
+          <circle cx="50" cy="50" r="43" fill="url(#compass-face)" stroke="#17285d" strokeWidth=".8" />
+          <circle cx="50" cy="50" r="39" fill="none" stroke="#263b78" strokeWidth=".5" />
+          {compassTicks.map(({ angle, start, end, width }, index) => (
             <line
-              key={i}
+              key={index}
               x1="50"
-              y1={i % 4 === 0 ? "11" : "13"}
+              y1={start}
               x2="50"
-              y2={i % 4 === 0 ? "18" : "16"}
-              stroke={i % 4 === 0 ? "#14215c" : "#7f8ba6"}
-              strokeWidth={i % 4 === 0 ? "1.5" : ".7"}
-              transform={`rotate(${i * 11.25} 50 50)`}
+              y2={end}
+              stroke={index % 8 === 0 ? "#101b43" : "#77819a"}
+              strokeWidth={width}
+              transform={`rotate(${angle} 50 50)`}
             />
           ))}
-          <g className="compass-points" fill="#14215c" fontFamily="Manrope, sans-serif" fontSize="6" fontWeight="800" textAnchor="middle">
-            <text x="50" y="23">N</text>
-            <text x="69" y="31">NE</text>
-            <text x="78" y="52">E</text>
-            <text x="69" y="73">SE</text>
-            <text x="50" y="82">S</text>
-            <text x="31" y="73">SW</text>
-            <text x="22" y="52">W</text>
-            <text x="31" y="31">NW</text>
+          <g stroke="#66728e" strokeWidth=".35" opacity=".8">
+            {[...Array(32).keys()].map(index => (
+              <line key={index} x1="50" y1="18" x2="50" y2={index % 4 === 0 ? "35" : "29"} transform={`rotate(${index * 11.25} 50 50)`} />
+            ))}
           </g>
+          <circle cx="50" cy="50" r="18" fill="url(#compass-face)" stroke="#17285d" strokeWidth=".8" />
+          <polygon points={rosePoints} fill="url(#compass-rose)" stroke="#d8b45a" strokeWidth=".55" />
           <g className="compass-needle">
-            <polygon points="50,27 54,47 50,50 46,47" fill="url(#compass-red)" />
-            <polygon points="50,73 54,53 50,50 46,53" fill="url(#compass-blue)" />
-            <polygon points="27,50 47,46 50,50 47,54" fill="#d8b45a" />
-            <polygon points="73,50 53,46 50,50 53,54" fill="#314a91" />
-            <polygon points="34,34 48,47 50,50 47,48" fill="#314a91" />
-            <polygon points="66,34 52,47 50,50 53,48" fill="#d8b45a" />
-            <polygon points="66,66 52,53 50,50 53,52" fill="#314a91" />
-            <polygon points="34,66 48,53 50,50 47,52" fill="#d8b45a" />
+            <polygon points="50,23 53,48 50,50 47,48" fill="#b83235" stroke="#fff" strokeWidth=".35" />
+            <polygon points="50,77 53,52 50,50 47,52" fill="#14215c" stroke="#fff" strokeWidth=".35" />
           </g>
-          <circle cx="50" cy="50" r="5" fill="#d8b45a" stroke="#14215c" strokeWidth="1.5" />
-          <circle cx="50" cy="50" r="1.5" fill="#fff" />
+          <circle cx="50" cy="50" r="4.3" fill="url(#compass-gold)" stroke="#14215c" strokeWidth=".8" />
+          <circle cx="50" cy="50" r="1.4" fill="#fff" />
+          <g className="compass-points" fill="#111b40" fontFamily="Manrope, sans-serif" fontWeight="800" textAnchor="middle" dominantBaseline="middle">
+            {compassLabels.map(([label, x, y]) => (
+              <text key={label} x={x} y={y} fontSize={label.length === 1 ? "5.5" : "3.8"}>{label}</text>
+            ))}
+          </g>
+          <circle cx="50" cy="50" r="43" fill="none" stroke="#fff" strokeWidth=".5" opacity=".75" />
         </svg>
       </div>
     </div>
