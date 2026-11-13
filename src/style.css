@@ -192,6 +192,7 @@ button{font:inherit;cursor:pointer}
 .section-reveal{opacity:0;transform:translateY(24px) scale(.99);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
 .section-reveal.is-visible{opacity:1;transform:translateY(0) scale(1)}
 .section-highlight{animation:section-focus 1.25s ease-out}
+.section-highlight>.container,.section-highlight>.hero-inner,.section-highlight>.contact-content{animation:section-arrive .7s cubic-bezier(.2,.7,.2,1) both}
 .section-highlight .section-title h2,.section-highlight .hero-copy h1,.section-highlight .edu-left h2,.section-highlight.contact h2{animation:section-title-focus .9s ease-out}
 .tilt-card{transform-style:preserve-3d;transition:transform .24s cubic-bezier(.2,.7,.2,1),box-shadow .25s,border-color .25s}
 .tilt-card:hover{transform:perspective(900px) rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg)) translateY(-4px)}
@@ -202,6 +203,7 @@ button{font:inherit;cursor:pointer}
 .contact-details a:hover{transform:translateX(5px);color:var(--yellow)}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.55)}50%{box-shadow:0 0 0 6px rgba(52,211,153,0)}}
 @keyframes section-focus{0%,100%{box-shadow:inset 0 0 0 0 rgba(245,197,66,0),0 0 0 rgba(30,47,122,0)}18%{box-shadow:inset 0 0 0 3px rgba(245,197,66,.68),0 0 32px rgba(30,47,122,.16)}}
+@keyframes section-arrive{0%{opacity:.55;transform:perspective(1200px) translateY(14px) translateZ(-24px) rotateX(2deg)}100%{opacity:1;transform:perspective(1200px) translateY(0) translateZ(0) rotateX(0)}}
 @keyframes section-title-focus{0%,100%{transform:scale(1);text-shadow:none}35%{transform:scale(1.025);text-shadow:0 6px 24px rgba(245,197,66,.38)}}
 @keyframes gallery-enter-forward{from{opacity:0;transform:translateX(5%) rotateY(42deg) scale(.92)}to{opacity:1;transform:translateX(0) rotateY(0) scale(1)}}
 @keyframes gallery-enter-backward{from{opacity:0;transform:translateX(-5%) rotateY(-42deg) scale(.92)}to{opacity:1;transform:translateX(0) rotateY(0) scale(1)}}
@@ -213,6 +215,7 @@ button{font:inherit;cursor:pointer}
 .header{height:66px}.menu-toggle{display:block}
 .nav{display:none;position:absolute;top:66px;left:0;right:0;background:#fff;padding:10px 24px 22px;border-bottom:1px solid var(--line);box-shadow:0 16px 28px rgba(15,30,80,.1);flex-direction:column;align-items:stretch;gap:0}
 .nav.nav-open{display:flex}
+.nav.nav-open{transform-origin:top center;animation:menu-arrive .28s cubic-bezier(.2,.7,.2,1) both}
 .nav a{padding:13px 0;border-bottom:1px solid #eef1f6;font-size:14px}
 .nav .hire-button{justify-content:center;margin-top:14px;border-bottom:0}
 .hero-inner{grid-template-columns:1fr;padding-top:40px}
@@ -233,5 +236,10 @@ button{font:inherit;cursor:pointer}
 .gallery-previous{left:10px}
 .gallery-next{right:10px}
 .footer{flex-wrap:wrap}.footer>span{order:3;width:100%}}
-@media(hover:none){.tilt-card:hover{transform:none}}
+@keyframes menu-arrive{from{opacity:0;transform:perspective(700px) rotateX(-8deg) translateY(-8px)}to{opacity:1;transform:perspective(700px) rotateX(0) translateY(0)}}
+@media(hover:none){
+.tilt-card:hover{transform:none}
+.tilt-card:active{transform:perspective(900px) rotateX(2deg) rotateY(-2deg) translateY(-2px) scale(.985);box-shadow:0 14px 28px rgba(15,30,80,.12)}
+.btn:active,.nav a:active,.menu-toggle:active,.compass-btn:active{transform:scale(.94) translateY(1px)}
+}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

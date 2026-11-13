@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Anchor, Mail, Phone, MapPin, CalendarDays, ShieldCheck, BadgePercent, Award,
-  FileText, Compass, CheckCircle2, GraduationCap, Lock,
+  FileText, Compass, CheckCircle2, GraduationCap, Ship,
   Menu, X, Send, ChevronLeft, ChevronRight
 } from "lucide-react";
 import "./style.css";
@@ -115,7 +115,7 @@ function Header() {
       <nav className={open ? "nav nav-open" : "nav"}>
         {links.map(([label, id]) => <a key={id} href={"#" + id} onClick={() => highlightSection(id)}>{label}</a>)}
         <a href="#gallery" onClick={() => highlightSection("gallery")}>Gallery</a>
-        <a className="hire-button" href="#contact" onClick={() => highlightSection("contact")}><Lock size={14} /> Hire for Vessel</a>
+        <a className="hire-button" href="#contact" onClick={() => highlightSection("contact")}><Ship size={14} /> Hire for Vessel</a>
       </nav>
     </header>
   );
