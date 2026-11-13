@@ -199,7 +199,7 @@ function CompassBadge() {
           </g>
           <circle cx="50" cy="50" r="18" fill="url(#compass-face)" stroke="#17285d" strokeWidth=".8" />
           <polygon points={rosePoints} fill="url(#compass-rose)" stroke="#d8b45a" strokeWidth=".55" />
-          <g className="compass-needle">
+          <g className="compass-needle" filter="drop-shadow(0 0.8px 0.7px rgba(7, 17, 38, .45))">
             <polygon points="50,23 53,48 50,50 47,48" fill="#b83235" stroke="#fff" strokeWidth=".35" />
             <polygon points="50,77 53,52 50,50 47,52" fill="#14215c" stroke="#fff" strokeWidth=".35" />
           </g>
@@ -222,6 +222,8 @@ function CompassBadge() {
 /* ------------------------------------------------------------------ */
 
 function Hero() {
+  const [showCompass, setShowCompass] = useState(false);
+
   return (
     <section className="hero" id="home">
       <div className="hero-inner">
@@ -249,12 +251,20 @@ function Hero() {
           <div className="portrait-card tilt-card">
             <div className="portrait-photo">
               <img src={IMAGES.hero} alt="Farazul Haque in merchant navy uniform on a ship deck" />
-              <CompassBadge />
+              {showCompass && <CompassBadge />}
               <div className="portrait-caption">
                 <span>MERCHANT NAVY CANDIDATE</span>
                 <small>AMET Marine Training College • Chennai</small>
               </div>
-              <button className="compass-btn" aria-label="Compass"><Compass size={18} /></button>
+              <button
+                className="compass-btn"
+                type="button"
+                aria-label={showCompass ? "Hide compass" : "Show compass"}
+                aria-expanded={showCompass}
+                onClick={() => setShowCompass(visible => !visible)}
+              >
+                <Compass size={18} />
+              </button>
             </div>
             <div className="chip-grid">
               <span><MapPin size={13} /> {profile.location}</span>
