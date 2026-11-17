@@ -439,7 +439,7 @@ function Education() {
         <div className="edu-right">
           <figure className="ship-photo tilt-card">
             <img src={IMAGES.ship} alt="Farazul Haque wearing a white cap" />
-            <figcaption><span>Ready for Deep-Sea Maritime Operations</span> • Container / Bulk Carrier / Oil & Chemical Tanker</figcaption>
+            <figcaption><span>Ready for Deep-Sea Maritime Operations</span> • Container / Bulk Carrier / Oil & Chemical Tanker / Ro-Ro</figcaption>
           </figure>
         </div>
       </div>
