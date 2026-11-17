@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Anchor, Mail, Phone, MapPin, CalendarDays, ShieldCheck, BadgePercent, Award,
@@ -6,6 +6,7 @@ import {
   Menu, X, Send, ChevronLeft, ChevronRight
 } from "lucide-react";
 import "./style.css";
+import pdfWorkerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 
 /* ------------------------------------------------------------------ */
 /*  CONTENT — everything on the page is edited here                    */
@@ -44,17 +45,40 @@ const highlights = [
 ];
 
 const documents = [
-  { badge: "Valid for 10 Years", title: "Continuous Discharge Certificate (Indian CDC)", fields: [["DOC NUMBER", "MUM 649873"], ["PLACE OF ISSUE", "Mumbai"], ["DATE OF ISSUE", "29.04.2026"], ["VALID UNTIL", "28.04.2036", true]] },
-  { badge: "Verified & Active", title: "INDOS (Indian National Database of Seafarers)", fields: [["DOC NUMBER", "26GM2070"], ["PLACE OF ISSUE", "Mumbai"], ["DATE OF ISSUE", "10.01.2026"], ["VALID UNTIL", "Lifetime / Permanent", true]] },
-  { badge: "Biometric Verified", title: "Seafarers Identity Document (SID)", fields: [["DOC NUMBER", "K35834251"], ["PLACE OF ISSUE", "Kolkata"], ["DATE OF ISSUE", "29.06.2026"], ["VALID UNTIL", "28.06.2036", true]] },
-  { badge: "International Clearance", title: "Republic of India Passport", fields: [["DOC NUMBER", "W7736538"], ["PLACE OF ISSUE", "Ranchi"], ["DATE OF ISSUE", "26.12.2022"], ["VALID UNTIL", "25.12.2032", true]] }
+  { badge: "Seafarer Registration", title: "INDOS (Indian National Database of Seafarers)", fields: [["DOC NUMBER", "26GM2070"], ["PLACE OF ISSUE", "Mumbai"], ["DATE OF ISSUE", "10.01.2026"], ["VALID UNTIL", "Lifetime", true]] },
+  { badge: "International Clearance", title: "Republic of India Passport", fields: [["DOC NUMBER", "W7736538"], ["PLACE OF ISSUE", "Ranchi"], ["DATE OF ISSUE", "26.12.2022"], ["VALID UNTIL", "25.12.2032", true]] },
+  { badge: "	Seafarer Service Record", title: "Continuous Discharge Certificate (Indian CDC)", fields: [["DOC NUMBER", "MUM 649873"], ["PLACE OF ISSUE", "Mumbai"], ["DATE OF ISSUE", "29.04.2026"], ["VALID UNTIL", "28.04.2036", true]] },
+  { badge: "Biometric Identity", title: "Seafarers Identity Document (SID)", fields: [["DOC NUMBER", "K35834251"], ["PLACE OF ISSUE", "Kolkata"], ["DATE OF ISSUE", "29.06.2026"], ["VALID UNTIL", "28.06.2036", true]] },
 ];
 
 const scores = [
-  ["Theory Part 1+2+3+6", "69.99", "/ 75", "Pass marks: 45 (Distinction)", true],
-  ["Theory Part 4+5+7", "69.00", "/ 75", "Pass marks: 45 (Distinction)", true],
-  ["Practical/Oral (Part 1+2+3+6)", "153.0", "/ 175", "Exam: 28.07.2026", false],
-  ["Practical/Oral (Part 4+5+7)", "120.0", "/ 175", "Issue: 31.07.2026", false]
+  {
+    label: "Theory (Part 1+2+3+6)",
+    subjects: [
+      ["Part 1", "Maritime English and General Ship Knowledge"],
+      ["Part 2", "Navigation at Support Level"],
+      ["Part 3", "Cargo Handling and Stowage at Support Level"],
+      ["Part 6", "Controlling the Operation of Ship and Care for Persons on Board at Support Level"]
+    ],
+    value: "69.99",
+    max: "/ 75",
+    foot: "Pass marks: 45 (Distinction)",
+    theory: true
+  },
+  {
+    label: "Theory (Part 4+5+7)",
+    subjects: [
+      ["Part 4", "Marine Engineering at Support Level"],
+      ["Part 5", "Electrical, Electronic and Control Engineering at Support Level"],
+      ["Part 7", "Maintenance and Repair at Support Level"]
+    ],
+    value: "69.00",
+    max: "/ 75",
+    foot: "Pass marks: 45 (Distinction)",
+    theory: true
+  },
+  { label: "Practical/Oral (Part 1+2+3+6)", value: "153.0", max: "/ 175", foot: "Exam: 28.07.2026", theory: false },
+  { label: "Practical/Oral (Part 4+5+7)", value: "120.0", max: "/ 175", foot: "Issue: 31.07.2026", theory: false }
 ];
 
 const schooling = [
@@ -233,6 +257,33 @@ function CompassBadge() {
 
 function Hero() {
   const [showCompass, setShowCompass] = useState(false);
+  const [typedRole, setTypedRole] = useState("");
+  const [isTypingRole, setIsTypingRole] = useState(true);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setTypedRole(profile.role);
+      setIsTypingRole(false);
+      return;
+    }
+
+    const roleCharacters = Array.from(profile.role);
+    let timerId;
+    let index = 0;
+
+    const typeRole = () => {
+      index += 1;
+      setTypedRole(roleCharacters.slice(0, index).join(""));
+      if (index < roleCharacters.length) {
+        timerId = window.setTimeout(typeRole, 70);
+      } else {
+        setIsTypingRole(false);
+      }
+    };
+
+    timerId = window.setTimeout(typeRole, 160);
+    return () => window.clearTimeout(timerId);
+  }, []);
 
   return (
     <section className="hero" id="home">
@@ -240,7 +291,10 @@ function Hero() {
         <div className="hero-copy">
           <span className="availability"><i /> Immediately Available for Sea Duty / Vessel Boarding</span>
           <h1>{profile.name}</h1>
-          <h2>{profile.role}</h2>
+          <h2 className="typewriter-heading" aria-label={profile.role}>
+            <span className="typewriter-placeholder" aria-hidden="true">{profile.role}</span>
+            <span className="typewriter-output" aria-hidden="true">{typedRole}{isTypingRole && <i className="typewriter-cursor" />}</span>
+          </h2>
           <p className="hero-summary">
             Pre-Sea General Purpose Rating graduate from <b>AMET University, Chennai</b> with proven academic merit (ranked in the <b className="navy">Top 25% National Merit List - Rank 313th</b>). Completely equipped with verified Indian INDOS, Passport, CDC and SID DG Shipping compliant STCW safety certificates.
           </p>
@@ -251,7 +305,7 @@ function Hero() {
           </div>
           <div className="hero-actions">
             <a className="btn btn-primary" href={"mailto:" + profile.email}><Send size={15} /> Send Placement Inquiry</a>
-            <a className="btn btn-outline" href="/CV%20-%20FH.pdf" target="_blank" rel="noopener noreferrer"><FileText size={15} /> View Resume</a>
+            <a className="btn btn-outline" href="/?document=resume" target="_blank" rel="noopener noreferrer"><FileText size={15} /> View Resume</a>
             <a className="btn btn-outline" href={"tel:" + profile.phone.replace(/[^\d+]/g, "")}><Phone size={14} /> {profile.phone}</a>
             <a className="btn btn-outline btn-small" href={"mailto:" + profile.email}><CheckCircle2 size={13} /> {profile.email}</a>
           </div>
@@ -347,36 +401,45 @@ function Education() {
   return (
     <section className="section" id="education">
       <div className="container edu-layout">
-        <div className="edu-left">
+        <div className="edu-intro">
           <span className="eyebrow">MARITIME ACADEMY EDUCATION</span>
-          <h2>General Purpose Rating (G.P. Rating)</h2>
-          <div className="college-box">
-            <b>Marine Training College, AMET University</b>
-            <small>Chennai, Tamil Nadu, India • MTI No.: <code>401001</code></small>
+          <div className="edu-heading-block">
+            <h2>General Purpose Rating (G.P. Rating)</h2>
+            <div className="college-box">
+              <b>Marine Training College, AMET University</b>
+              <small>Chennai, Tamil Nadu, India • MTI No.: <code>401001</code></small>
+            </div>
           </div>
           <p className="edu-text">Rigorous residential pre-sea training covering deck and engine seamanship, shipboard routine, rope work, splicing, life-saving appliances, fire fighting systems, marine safety regulations, and navigational watch support.</p>
+        </div>
 
-          <div className="score-card">
-            <div className="score-head">
-              <b>G.P. Rating Board Examination Scores</b>
-              <span className="merit-tag">National Merit: 313th Position</span>
-            </div>
-            <div className="score-grid">
-              {scores.map(([label, value, max, foot, green]) => (
-                <div className="score tilt-card" key={label}>
-                  <small>{label}</small>
-                  <b className={green ? "" : "navy"}>{value} <span>{max}</span></b>
-                  <em className={green ? "ok" : ""}>{foot}</em>
-                </div>
-              ))}
-            </div>
+        <div className="score-card">
+          <div className="score-head">
+            <b>G.P. Rating Board Examination Scores</b>
+            <span className="merit-tag">National Merit: 313th Position</span>
+          </div>
+          <div className="score-grid">
+            {scores.map(({ label, subjects, value, max, foot, theory }) => (
+              <div className={`score tilt-card${theory ? " score-theory" : ""}`} key={label}>
+                <small className="score-label">{label}</small>
+                {theory && (
+                  <ul className="score-subjects">
+                    {subjects.map(([part, subject]) => (
+                      <li key={part}><span>{part}</span><span>{subject}</span></li>
+                    ))}
+                  </ul>
+                )}
+                <b className={theory ? "score-value" : "score-value navy"}>{value} <span>{max}</span></b>
+                <em className={theory ? "ok" : ""}>{foot}</em>
+              </div>
+            ))}
           </div>
         </div>
 
         <div className="edu-right">
           <figure className="ship-photo tilt-card">
             <img src={IMAGES.ship} alt="Farazul Haque wearing a white cap" />
-            <figcaption><span>Ready for Deep-Sea Fleet Deployment</span> • Container / Bulk / Tanker</figcaption>
+            <figcaption><span>Ready for Deep-Sea Maritime Operations</span> • Container / Bulk Carrier / Oil & Chemical Tanker</figcaption>
           </figure>
         </div>
       </div>
@@ -407,10 +470,10 @@ function Certifications() {
               <div><h3>{c.title}</h3><small>{c.status}</small></div>
               <a
                 className="cert-document"
-                href={c.pdf}
+                href={`/?document=${certificateViewerId(c.code)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`View ${c.title} certificate PDF`}
+                aria-label={`Show ${c.title} certificate`}
               >
                 <FileText size={17} />
               </a>
@@ -580,4 +643,140 @@ function App() {
   );
 }
 
-createRoot(document.getElementById("root")).render(<App />);
+function certificateViewerId(code) {
+  return `certificate-${code.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+}
+
+function getRequestedDocument() {
+  const documentId = new URLSearchParams(window.location.search).get("document");
+  if (documentId === "resume") {
+    return { title: "Resume", src: "/CV%20-%20FH.pdf" };
+  }
+
+  const certificate = certifications.find(item => certificateViewerId(item.code) === documentId);
+  return certificate ? { title: certificate.title, src: certificate.pdf } : null;
+}
+
+function PdfViewer({ title, src }) {
+  const [pdf, setPdf] = useState(null);
+  const [pages, setPages] = useState([]);
+  const [error, setError] = useState("");
+  const canvasRefs = useRef([]);
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = `${title} | Farazul Haque`;
+    return () => {
+      document.title = previousTitle;
+    };
+  }, [title]);
+
+  useEffect(() => {
+    let cancelled = false;
+    let loadingTask;
+    setPdf(null);
+    setPages([]);
+    setError("");
+
+    const loadDocument = async () => {
+      try {
+        const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+        if (cancelled) return;
+        pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+        loadingTask = pdfjs.getDocument({ url: src });
+        const document = await loadingTask.promise;
+        if (cancelled) return;
+        setPdf(document);
+        setPages(Array.from({ length: document.numPages }, (_, index) => index + 1));
+      } catch (loadError) {
+        if (cancelled) return;
+        console.error("PDF document could not be loaded:", loadError);
+        setError("This document could not be displayed. Please try again later.");
+      }
+    };
+
+    loadDocument();
+
+    return () => {
+      cancelled = true;
+      if (loadingTask) loadingTask.destroy();
+    };
+  }, [src]);
+
+  useEffect(() => {
+    if (!pdf || pages.length === 0) return undefined;
+
+    let cancelled = false;
+    const renderTasks = [];
+
+    const renderPages = async () => {
+      try {
+        const availableWidth = Math.min(window.innerWidth - 40, 1000);
+        const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+
+        for (const [index, pageNumber] of pages.entries()) {
+          const canvas = canvasRefs.current[index];
+          if (!canvas) continue;
+
+          const page = await pdf.getPage(pageNumber);
+          if (cancelled) return;
+
+          const baseViewport = page.getViewport({ scale: 1 });
+          const scale = Math.min(1.6, availableWidth / baseViewport.width);
+          const viewport = page.getViewport({ scale: scale * outputScale });
+          const displayViewport = page.getViewport({ scale });
+          const context = canvas.getContext("2d");
+          if (!context) throw new Error(`Could not create a canvas for page ${pageNumber}.`);
+
+          canvas.width = Math.ceil(viewport.width);
+          canvas.height = Math.ceil(viewport.height);
+          canvas.style.width = `${displayViewport.width}px`;
+          canvas.style.height = `${displayViewport.height}px`;
+
+          const renderTask = page.render({ canvasContext: context, viewport });
+          renderTasks.push(renderTask);
+          await renderTask.promise;
+        }
+      } catch (renderError) {
+        if (cancelled) return;
+        console.error("PDF document could not be rendered:", renderError);
+        setError("This document could not be displayed. Please try again later.");
+      }
+    };
+
+    renderPages();
+    return () => {
+      cancelled = true;
+      renderTasks.forEach(task => task.cancel());
+    };
+  }, [pdf, pages]);
+
+  return (
+    <main className="document-viewer">
+      <header className="document-viewer-header">
+        <a href="/">Back to portfolio</a>
+        <h1>{title}</h1>
+      </header>
+      {error ? (
+        <p className="document-viewer-message" role="alert">{error}</p>
+      ) : pages.length === 0 ? (
+        <p className="document-viewer-message" role="status">Loading document…</p>
+      ) : (
+        <div className="document-viewer-pages">
+          {pages.map((page, index) => (
+            <canvas
+              key={page}
+              ref={element => { canvasRefs.current[index] = element; }}
+              aria-label={`Page ${page} of ${title}`}
+            />
+          ))}
+        </div>
+      )}
+    </main>
+  );
+}
+
+const requestedDocument = getRequestedDocument();
+createRoot(document.getElementById("root")).render(
+  requestedDocument ? <PdfViewer {...requestedDocument} /> : <App />
+);
