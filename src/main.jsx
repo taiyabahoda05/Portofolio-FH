@@ -106,7 +106,7 @@ const competencies = [
 
 const gallery = [
   { src: "/gallery/29.png", title: "29" },
-  { src: "/images/hero-firefighter.jpg", title: "Fire & Safety Training" },
+  { src: "/gallery/33.png", title: "Fire & Safety Training" },
   { src: "/gallery/orange-uniform-portrait.jpg", title: "Professional Portrait" },
   { src: "/gallery/bridge-operations.png", title: "Bridge Familiarization" },
   { src: "/gallery/3.jpeg", title: "3" },
@@ -308,6 +308,14 @@ function Hero() {
             <a className="btn btn-outline" href="/?document=resume" target="_blank" rel="noopener noreferrer"><FileText size={15} /> View Resume</a>
             <a className="btn btn-outline" href={"tel:" + profile.phone.replace(/[^\d+]/g, "")}><Phone size={14} /> {profile.phone}</a>
             <a className="btn btn-outline btn-small" href={"mailto:" + profile.email}><CheckCircle2 size={13} /> {profile.email}</a>
+            <a className="btn btn-outline linkedin-link" href="https://www.linkedin.com/in/farazul-haq/" target="_blank" rel="noopener noreferrer" aria-label="Visit Farazul Haque on LinkedIn">
+              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="3" fill="currentColor" />
+                <circle cx="7" cy="8" r="1.25" fill="#fff" />
+                <path d="M6 10h2v7H6zm4 0h2v1c.4-.7 1.2-1.2 2.4-1.2 2 0 3.1 1.2 3.1 3.5V17h-2v-3.4c0-1.2-.5-1.8-1.5-1.8s-2 0.8-2 2V17h-2z" fill="#fff" />
+              </svg>
+              LinkedIn
+            </a>
           </div>
         </div>
 

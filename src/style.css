@@ -53,6 +53,8 @@ button{font:inherit;cursor:pointer}
 .btn-outline{background:#fff;border:1px solid var(--line);color:var(--ink)}
 .btn-outline:hover{border-color:var(--navy)}
 .btn-small{font-size:12px;font-weight:500;color:var(--text)}
+.linkedin-link{padding-inline:22px}
+.linkedin-link svg{color:var(--navy)}
 
 /* Hero right column */
 .hero-side{display:flex;flex-direction:column;gap:16px}
