@@ -658,7 +658,7 @@ function certificateViewerId(code) {
 function getRequestedDocument() {
   const documentId = new URLSearchParams(window.location.search).get("document");
   if (documentId === "resume") {
-    return { title: "Resume", src: "/CV%20-%20FH.pdf" };
+    return { title: "Resume", src: "/CV-FH.pdf" };
   }
 
   const certificate = certifications.find(item => certificateViewerId(item.code) === documentId);
