@@ -668,6 +668,7 @@ function getRequestedDocument() {
 function PdfViewer({ title, src }) {
   const [pdf, setPdf] = useState(null);
   const [pages, setPages] = useState([]);
+  const [linksByPage, setLinksByPage] = useState([]);
   const [error, setError] = useState("");
   const canvasRefs = useRef([]);
 
@@ -684,6 +685,7 @@ function PdfViewer({ title, src }) {
     let loadingTask;
     setPdf(null);
     setPages([]);
+    setLinksByPage([]);
     setError("");
 
     const loadDocument = async () => {
@@ -716,6 +718,7 @@ function PdfViewer({ title, src }) {
 
     let cancelled = false;
     const renderTasks = [];
+    const pageLinks = [];
 
     const renderPages = async () => {
       try {
@@ -733,6 +736,20 @@ function PdfViewer({ title, src }) {
           const scale = Math.min(1.6, availableWidth / baseViewport.width);
           const viewport = page.getViewport({ scale: scale * outputScale });
           const displayViewport = page.getViewport({ scale });
+          const annotations = await page.getAnnotations();
+          pageLinks[index] = annotations
+            .filter(annotation => annotation.subtype === "Link" && /^https?:\/\//i.test(annotation.url || ""))
+            .map(annotation => {
+              const [x1, y1] = displayViewport.convertToViewportPoint(annotation.rect[0], annotation.rect[1]);
+              const [x2, y2] = displayViewport.convertToViewportPoint(annotation.rect[2], annotation.rect[3]);
+              return {
+                url: annotation.url,
+                left: Math.min(x1, x2),
+                top: Math.min(y1, y2),
+                width: Math.abs(x2 - x1),
+                height: Math.abs(y2 - y1)
+              };
+            });
           const context = canvas.getContext("2d");
           if (!context) throw new Error(`Could not create a canvas for page ${pageNumber}.`);
 
@@ -745,6 +762,7 @@ function PdfViewer({ title, src }) {
           renderTasks.push(renderTask);
           await renderTask.promise;
         }
+        if (!cancelled) setLinksByPage(pageLinks);
       } catch (renderError) {
         if (cancelled) return;
         console.error("PDF document could not be rendered:", renderError);
@@ -772,11 +790,28 @@ function PdfViewer({ title, src }) {
       ) : (
         <div className="document-viewer-pages">
           {pages.map((page, index) => (
-            <canvas
-              key={page}
-              ref={element => { canvasRefs.current[index] = element; }}
-              aria-label={`Page ${page} of ${title}`}
-            />
+            <div className="document-viewer-page" key={page}>
+              <canvas
+                ref={element => { canvasRefs.current[index] = element; }}
+                aria-label={`Page ${page} of ${title}`}
+              />
+              {(linksByPage[index] || []).map((link, linkIndex) => (
+                <a
+                  key={linkIndex}
+                  className="document-viewer-link"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open link in resume"
+                  style={{
+                    left: `${link.left}px`,
+                    top: `${link.top}px`,
+                    width: `${link.width}px`,
+                    height: `${link.height}px`
+                  }}
+                />
+              ))}
+            </div>
           ))}
         </div>
       )}
