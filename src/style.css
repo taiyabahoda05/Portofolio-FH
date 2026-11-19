@@ -246,6 +246,10 @@ button{font:inherit;cursor:pointer}
 @media(max-width:640px){
 .identity-text b{font-size:13px}.identity-text small{font-size:8.5px}
 .hero h1{margin-top:28px}.stat-row{grid-template-columns:1fr 1fr}.portrait-photo{height:340px}
+.hero-actions{gap:8px}
+.hero-actions .btn-small,.hero-actions .linkedin-link{flex:1 1 calc(50% - 4px);justify-content:center;padding-inline:8px;white-space:nowrap}
+.hero-actions .btn-small{font-size:10.5px}
+.hero-actions .linkedin-link{padding-inline:8px}
 .section{padding:60px 0}
 .feature-grid,.cert-grid,.doc-grid{grid-template-columns:1fr}
 .school-grid{grid-template-columns:1fr}
